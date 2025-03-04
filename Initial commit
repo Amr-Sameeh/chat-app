@@ -83,7 +83,7 @@
       var time = timeString + " " + dateString;
 
       // Call your Google Apps Script function here
-      var scriptURL = 'YOUR_GOOGLE_APPS_SCRIPT_URL';
+      var scriptURL = 'https://script.google.com/macros/s/AKfycbyFOc3cjIRQVd-e9jLE7_ZneQ9XAFEM8RcyXjBZdZrSGUQqe1Jw_58Jfm9l13ItDBdVtQ/exec';
       fetch(scriptURL, {
         method: 'POST',
         headers: {
@@ -110,7 +110,7 @@
     }
 
     function loadData() {
-      var scriptURL = 'YOUR_GOOGLE_APPS_SCRIPT_URL';
+      var scriptURL = 'https://script.google.com/macros/s/AKfycbyFOc3cjIRQVd-e9jLE7_ZneQ9XAFEM8RcyXjBZdZrSGUQqe1Jw_58Jfm9l13ItDBdVtQ/exec';
       fetch(scriptURL)
         .then(response => response.json())
         .then(data => {
