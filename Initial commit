@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      height: 100vh;
+      margin: 0;
+      padding-bottom: 20px;
+    }
+    .container {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .messages {
+      padding: 20px;
+      overflow-y: auto;
+      flex-grow: 1;
+    }
+    .message {
+      border-bottom: 1px solid #ddd;
+      margin-bottom: 10px;
+      padding-bottom: 10px;
+    }
+    .message .text {
+      font-size: 16px;
+    }
+    .message .time {
+      font-size: 12px;
+      color: #888;
+      margin-top: 5px;
+    }
+    .input-container {
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      background-color: #fff;
+      border-top: 1px solid #ddd;
+    }
+    input[type="text"] {
+      flex-grow: 1;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      margin-right: 10px;
+    }
+    button {
+      background-color: #0084ff;
+      border: none;
+      padding: 10px;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+    button img {
+      width: 24px;
+      height: 24px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="messages" id="messages"></div>
+    <div class="input-container">
+      <input type="text" id="inputText" placeholder="اكتب هنا...">
+      <button type="button" onclick="sendData()">
+        <img src="https://cdn-icons-png.flaticon.com/512/60/60525.png" alt="Send">
+      </button>
+    </div>
+  </div>
+
+  <script>
+    function sendData() {
+      var text = document.getElementById("inputText").value;
+      var now = new Date();
+      var timeString = now.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
+      var dateString = now.toLocaleDateString('ar-EG');
+      var time = timeString + " " + dateString;
+
+      // Call your Google Apps Script function here
+      var scriptURL = 'YOUR_GOOGLE_APPS_SCRIPT_URL';
+      fetch(scriptURL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ text: text, time: time }),
+      });
+
+      document.getElementById("inputText").value = "";
+
+      // Add message to the messages div
+      var messagesContainer = document.getElementById("messages");
+      var messageContainer = document.createElement("div");
+      messageContainer.className = "message";
+      var messageText = document.createElement("div");
+      messageText.className = "text";
+      messageText.textContent = text;
+      var messageTime = document.createElement("div");
+      messageTime.className = "time";
+      messageTime.textContent = time;
+      messageContainer.appendChild(messageText);
+      messageContainer.appendChild(messageTime);
+      messagesContainer.appendChild(messageContainer);
+    }
+
+    function loadData() {
+      var scriptURL = 'YOUR_GOOGLE_APPS_SCRIPT_URL';
+      fetch(scriptURL)
+        .then(response => response.json())
+        .then(data => {
+          displayData(data);
+        });
+    }
+
+    function displayData(data) {
+      var messagesContainer = document.getElementById("messages");
+      messagesContainer.innerHTML = "";
+      data.forEach(function(row) {
+        var messageContainer = document.createElement("div");
+        messageContainer.className = "message";
+        var messageText = document.createElement("div");
+        messageText.className = "text";
+        messageText.textContent = row[0];
+        var messageTime = document.createElement("div");
+        messageTime.className = "time";
+        messageTime.textContent = row[1];
+        messageContainer.appendChild(messageText);
+        messageContainer.appendChild(messageTime);
+        messagesContainer.appendChild(messageContainer);
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+      loadData();
+    });
+  </script>
+</body>
+</html>
